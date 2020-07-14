@@ -4,15 +4,17 @@ public class Grid {
 	
 	private int height;
 	private int width;
-	Box[][] board;
+	private Box[][] board;
 	
 	public Grid(int height, int width) {
+		
 		this.height = height;
 		this.width = width;
-		board = new Box[height][width];
+		
+		board = new Box[width][height];
 		for(int i = 0; i < height; i++) {
 			for(int j = 0; j < width; j++){				
-				board[i][j] = null;
+				board[i][j] = new Box(i, j);
 			}
 		}
 	}
