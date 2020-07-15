@@ -7,7 +7,7 @@ public class DisplayGrid {
 		System.out.println();
 		for(int i = 0; i < grid.getHeight(); i++) {
 			for(int j = 0; j < grid.getHeight(); j++) {
-				System.out.println(" | " + grid.board[i][j] );
+				//System.out.println(" | " + grid.[i][j] );
 			}
 			System.out.println(" | ");
 		}
