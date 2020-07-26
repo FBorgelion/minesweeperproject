@@ -21,10 +21,6 @@ public  class Box {
 	public Box(int xLocation, int yLocation) {
 		this.xLocation = xLocation;
 		this.yLocation = yLocation;
-		
-		isTrapped = false;
-		isFlagged = false;
-		isClicked = false;
 	}
 	
 	
