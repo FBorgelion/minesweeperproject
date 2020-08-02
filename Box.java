@@ -1,9 +1,15 @@
 package be.fborgelion.minesweeperproject;
 
-public class Box {
+public  class Box {
 	
 	private int xLocation;
 	private int yLocation;
+	
+	//count adjacent bombs
+	private int surroundingBombs;
+	
+	//bow with bomb
+	private boolean isTrapped;
 	
 	//player put a red flag on the box (display)
 	private boolean isFlagged;
@@ -15,8 +21,6 @@ public class Box {
 	public Box(int xLocation, int yLocation) {
 		this.xLocation = xLocation;
 		this.yLocation = yLocation;
-		isFlagged = false;
-		isClicked = false;
 	}
 	
 	
@@ -50,6 +54,26 @@ public class Box {
 
 	public void setClicked(boolean isClicked) {
 		this.isClicked = isClicked;
+	}
+
+
+	public boolean isTrapped() {
+		return isTrapped;
+	}
+
+
+	public void setTrapped(boolean isTrapped) {
+		this.isTrapped = isTrapped;
+	}
+
+
+	public int getSurroundingBombs() {
+		return surroundingBombs;
+	}
+
+
+	public void setSurroundingBombs(int surroundingBombs) {
+		this.surroundingBombs = surroundingBombs;
 	}
 	
 }
