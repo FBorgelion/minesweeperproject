@@ -31,5 +31,13 @@ public class GridView {
 	public void setGridHeight(int gridHeight) {
 		this.gridHeight = gridHeight;
 	}
+
+	public GridPane getGrid() {
+		return grid;
+	}
+
+	public void setGrid(GridPane grid) {
+		this.grid = grid;
+	}
 	
 }
