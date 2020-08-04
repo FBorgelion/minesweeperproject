@@ -1,36 +1,30 @@
 package be.fborgelion.minesweeperproject;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.control.MenuBar;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.TilePane;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class GridView extends Application{
 	
-	private int x = 0;
-	private int y = 0;
-	
 	private Grid grid = new Grid(10, 10, 10);
 	private GridPane gameBoard;
-	
+	private MenuBar menuBar;
+	private Stage primaryStage;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		primaryStage.setTitle("MineSweeper");
+		
+		this.primaryStage = primaryStage;
+		primaryStage.setTitle("Minesweeper");
 		
 		gameBoard = new GridPane();
-		gameBoard.setHgap(5);
-		gameBoard.setVgap(5);
+		gameBoard.setHgap(1);
+		gameBoard.setVgap(1);
 		gameBoard.setAlignment(Pos.CENTER);
 		for(int j = 0; j < grid.getHeight(); j++) {
 			for(int i = 0; i < grid.getWidth(); i++) {
@@ -38,7 +32,12 @@ public class GridView extends Application{
 			}
 		}
 		
-		Scene scene = new Scene(gameBoard, 500, 475);
+		GridViewController gridViewCtrl = new GridViewController(grid, gameBoard);
+		
+		GridViewController.BoxListener boxListener = gridViewCtrl.new BoxListener();
+		gameBoard.addEventHandler(MouseEvent.MOUSE_CLICKED,boxListener);
+		
+		Scene scene = new Scene(gameBoard, 600, 600);
 		primaryStage.setScene(scene);
 		
 		primaryStage.show();
@@ -52,21 +51,21 @@ public class GridView extends Application{
 	public void setGrid(Grid grid) {
 		this.grid = grid;
 	}
-
 	
-	class BoardTile{
-		
-		public void paintComponent(Graphics g) {
-			g.setColor(Color.LIGHT_GRAY);
-			g.fillRect(x, y, 25, 25);
-			
-		}
-		
+	public MenuBar getMenuBar() {
+		return menuBar;
 	}
+
+	public Stage getPrimaryStage() {
+		return primaryStage;
+	}
+		
 	
 	public static void main(String args[]) {
 		launch(args);
 	}
+
+	
 
 	
 }

@@ -7,14 +7,22 @@ public class Grid {
 	private int height;
 	private int width;
 	private int nBombs;
-	private Box[][] board = null;
+	private Box[][] board;
 	private Box[] trappedBox;
+	private boolean hasLost;
+	private boolean hasWon;
 	
 	public Grid(int height, int width, int nBombs) {
 		
 		this.height = height;
 		this.width = width;
 		this.nBombs = nBombs;
+		this.board = new Box[width][height];
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
+				board[i][j] = new Box(i, j);
+			}
+		}
 	}
 
 	public int getHeight() {
@@ -37,8 +45,12 @@ public class Grid {
 		return board;
 	}
 	
+	public Box getBoxStatus(int x, int y) {
+		return board[x][y];
+	}
+	
 	//will come back to check bombs have different coordinates
-	protected void placeBombs() {		
+	protected void placeBombs() {;
 		trappedBox = new Box[nBombs];
 		
 		int count = 0;
@@ -48,20 +60,15 @@ public class Grid {
 			int x = new Random().nextInt(width);
 			int y = new Random().nextInt(height);
 			
-			Box box = new Box(x, y);
+			Box box = board[x][y];
 			box.setTrapped(true);
 			trappedBox[count] = box;
 			count += 1;
 		} while(count < nBombs);
-		
-		//place bombs in board
-		for(Box box : trappedBox) {
-			board[box.getxLocation()][box.getyLocation()] = box;
-		}
 	}
 	
 	//must add checker/exception. This method must be called AFTER placeBombs()
-	protected void placeBoxesInBoard() {
+	/*protected void placeBoxesInBoard() {
 		for(Box bomb : trappedBox) {
 			int x = bomb.getxLocation();
 			int y = bomb.getyLocation();			
@@ -82,5 +89,37 @@ public class Grid {
 				}
 			}			
 		}
+	}*/
+
+	public boolean isHasLost() {
+		return hasLost;
+	}
+
+	public void setHasLost(boolean hasLost) {
+		this.hasLost = hasLost;
+	}
+
+	public boolean isHasWon() {
+		return hasWon;
+	}
+
+	public void setHawWon(boolean hawWon) {
+		this.hasWon = hawWon;
+	}
+	
+	
+	public static void main(String[] args) {
+		
 	}
 }
+
+
+
+
+
+
+
+
+
+
+

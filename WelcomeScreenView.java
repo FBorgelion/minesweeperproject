@@ -24,7 +24,7 @@ public class WelcomeScreenView extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
-		primaryStage.setTitle("MineSweeper");
+		primaryStage.setTitle("Minesweeper");
 		
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);

@@ -30,6 +30,8 @@ public class WelcomeScreenController{
 		return usernameTF;
 	}
 	
+	
+	
 	//inner class to handle newGameBtn
 	class NewGameListener implements EventHandler<ActionEvent>{
 
