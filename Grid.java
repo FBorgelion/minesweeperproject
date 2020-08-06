@@ -7,10 +7,12 @@ public class Grid {
 	private int height;
 	private int width;
 	private int nBombs;
+	
 	private Box[][] board;
 	private Box[] trappedBox;
-	private boolean hasLost;
-	private boolean hasWon;
+	
+	private boolean hasLost = false;;
+	private boolean hasWon = false;
 	
 	public Grid(int height, int width, int nBombs) {
 		
@@ -68,7 +70,7 @@ public class Grid {
 	}
 	
 	//must add checker/exception. This method must be called AFTER placeBombs()
-	/*protected void placeBoxesInBoard() {
+	protected void placeBoxesInBoard() {
 		for(Box bomb : trappedBox) {
 			int x = bomb.getxLocation();
 			int y = bomb.getyLocation();			
@@ -89,7 +91,15 @@ public class Grid {
 				}
 			}			
 		}
-	}*/
+	}
+	
+	public boolean isEnd() {
+		boolean end = false;
+		if(isHasLost() || isHasWon()) {
+			end = true;
+		}
+		return end;
+	}
 
 	public boolean isHasLost() {
 		return hasLost;

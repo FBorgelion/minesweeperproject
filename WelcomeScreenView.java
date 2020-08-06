@@ -2,6 +2,7 @@ package be.fborgelion.minesweeperproject;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,8 +10,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -20,12 +23,22 @@ public class WelcomeScreenView extends Application {
 	
 	Stage primaryStage;
 	private String[] difficultyList = {"Easy", "Normal", "Hard"};
+
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
-		primaryStage.setTitle("Minesweeper");
 		
+		
+		Grid board = new Grid(10, 10, 10);
+		board.placeBombs();
+		board.placeBoxesInBoard();
+		
+		
+		primaryStage.setTitle("Minesweeper");		
+		
+			
+			//build scene1 (welcome screen)
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
@@ -62,25 +75,62 @@ public class WelcomeScreenView extends Application {
 		hbLoadSave.getChildren().add(loadSaveBtn);
 		grid.add(hbLoadSave, 1, 8);
 		
+		Scene scene1 = new Scene(grid, 300, 275);
 		
-		WelcomeScreenController wlcCtrl = new WelcomeScreenController(usernameTF, newGameBtn, loadSaveBtn);
 		
-		WelcomeScreenController.NewGameListener newGameBtnCtrl = wlcCtrl.new NewGameListener();
-		newGameBtn.addEventHandler(ActionEvent.ACTION, newGameBtnCtrl);
+		//build scene2 (board game)
+		GridPane gameBoard = new GridPane();
+		gameBoard.setHgap(1);
+		gameBoard.setVgap(1);
+		gameBoard.setAlignment(Pos.CENTER);
+		for(int j = 0; j < board.getHeight(); j++) {
+			for(int i = 0; i < board.getWidth(); i++) {
+				gameBoard.add(new Rectangle(40, 40), j, i);
+			}
+		}
 		
-		WelcomeScreenController.LoadSaveListener loadGameBtnCtrl = wlcCtrl.new LoadSaveListener();
-		loadSaveBtn.addEventHandler(ActionEvent.ACTION, loadGameBtnCtrl);
+		Scene scene2 = new Scene(gameBoard, 600, 600);
 		
+		newGameBtn.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				primaryStage.setScene(scene2);
 				
-		Scene scene = new Scene(grid, 300, 275);
-		primaryStage.setScene(scene);
+			}
+		});			
+			
+		GridViewController gridViewCtrl = new GridViewController(board, gameBoard);		
+		GridViewController.BoxListener boxListener = gridViewCtrl.new BoxListener();
+		gameBoard.addEventHandler(MouseEvent.MOUSE_CLICKED,boxListener);
 		
-		primaryStage.show();
-		
-	}
+		primaryStage.setScene(scene1);
+	
+/*	//build end game view
+		GridPane endView = new GridPane();
+		Text endMessage = new Text();
+		endView.setAlignment(Pos.CENTER);
+		if(board.isHasLost()) {
+			endMessage.setText("You lose.");
+			}
+			if(board.isHasWon()) {
+				endMessage.setText("Congratulations, you win !");
+			}
+			endView.add(endMessage, 0, 0);
+			
+			Scene scene3 = new Scene(endView, 300, 275);
+			if(board.isEnd()) {
+				primaryStage.setScene(scene3);
+			} */
+			
+			primaryStage.show();
+			
+		}
 	
 	public static void main(String args[]) {
 		launch(args);
+		
+		
 	}
 
 }

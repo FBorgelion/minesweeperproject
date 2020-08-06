@@ -4,6 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 public class GridViewController {
 	
@@ -11,6 +12,7 @@ public class GridViewController {
 	private GridPane gameBoard;
 	private Box processBox;
 	private BoxListener boxLstn;
+	private Stage stage;
 	
 	private int lastMouseX;
 	private int lastMouseY;
@@ -18,7 +20,7 @@ public class GridViewController {
 	private int nBoxes = grid.getHeight();
 	
 	private int BORDER_SIZE = 96;
-	private int BOX_SIZE = 40;
+	private int BOX_SIZE = 41;
 	
 	public GridViewController(Grid grid, GridPane gameBoard) {
 		this.gameBoard = gameBoard;
@@ -66,8 +68,10 @@ public class GridViewController {
 		clickedBox.setClicked(true);
 		if(clickedBox.isTrapped()) {
 			grid.setHasLost(true);
+			System.out.println(clickedBox.isTrapped());
 		//must update view
 		}
+		grid.isEnd();
 	}
 	
 	public void setBoxFlagged() {
