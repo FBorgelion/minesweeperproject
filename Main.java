@@ -2,27 +2,19 @@ package be.fborgelion.minesweeperproject;
 
 
 import javafx.application.Application;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
-
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -34,26 +26,21 @@ public class Main extends Application{
 	Stage primaryStage;
 	private Rectangle rect;
 	
-	private Rectangle buildRectangle(int x, int y, int size) {
-		Rectangle rect = new Rectangle();
-		rect.setX(x * size);
-		rect.setY(y * size);
-		rect.setHeight(size);
-		rect.setWidth(size);
-		rect.setFill(Color.LIGHTGRAY);
-		rect.setStroke(Color.BLACK);
-		return rect;
-	}
-	
 	private GridPane drawBoard(Grid board, Settings settings) {
 		GridPane gameBoard = new GridPane();
-		gameBoard.setHgap(1);
-		gameBoard.setVgap(1);
 		gameBoard.setAlignment(Pos.CENTER);
 		for(int j = 0; j < board.getHeight(); j++) {
 			for(int i = 0; i < board.getWidth(); i++) {
-				this.rect = buildRectangle(i, j, (settings.getRectSize()));
-				gameBoard.add(rect, j, i);
+				Box box = board.getBoxStatus(i, j);
+				StackPane pane = new StackPane();
+				if(box.isTrapped() == true) {
+					pane.getChildren().add(new Label("X"));
+				}
+				else {
+					pane.getChildren().add(new Label(String.valueOf(box.getSurroundingBombs())));				
+				}
+				pane.getChildren().add(new TileButton(settings));
+				gameBoard.add(pane, i, j);
 			}
 		}
 		return gameBoard;
@@ -96,7 +83,7 @@ public class Main extends Application{
 		easyGame.placeBombs();
 		easyGame.placeBoxesInBoard();
 		GridPane easyGameView = drawBoard(easyGame, settings1);
-		Scene scene2 = new Scene(easyGameView, 600, 600);
+		Scene scene2 = new Scene(easyGameView, 400, 400);
 		easyBtn.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
 
 			@Override
@@ -113,7 +100,7 @@ public class Main extends Application{
 		normalGame.placeBombs();
 		normalGame.placeBoxesInBoard();
 		GridPane normalGameView = drawBoard(normalGame, settings2);
-		Scene scene3 = new Scene(normalGameView, 600, 600);
+		Scene scene3 = new Scene(normalGameView, 400, 400);
 		normalBtn.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
 
 			@Override

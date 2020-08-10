@@ -18,7 +18,6 @@ public class GridViewController {
 	private int lastMouseX;
 	private int lastMouseY;
 	
-	private final int BORDER_SIZE = 95 ;
 	
 	/**
 	 * GridViewController reacts to game events.
@@ -45,10 +44,10 @@ public class GridViewController {
 		else if(grid.getHeight() == 20) {
 			rectSize = (int) (40 / 2);
 		}
-		int normalizedX = (lastMouseX - BORDER_SIZE) / (rectSize+ 1);
-		int normalizedY = (lastMouseY - BORDER_SIZE) /(rectSize + 1);
+		int normalizedX = (int) (lastMouseX) / (rectSize);
+		int normalizedY = (int) (lastMouseY) /(rectSize);
 		if(normalizedX > grid.getHeight() || normalizedY > grid.getHeight()) {
-			return new Box(-1, -1);
+			return null;
 		}
 		else {			
 			Box box = grid.getBoxStatus(normalizedX, normalizedY);
@@ -130,7 +129,6 @@ public class GridViewController {
 			
 			if(event.getButton() == MouseButton.PRIMARY) {
 				setGridStatus();
-				System.out.println("yop");
 			}
 			if(event.getButton() == MouseButton.SECONDARY) {
 				setBoxFlagged();

@@ -19,17 +19,17 @@ public  class Box {
 	/**
 	 * Say if a box is a bomb or not.
 	 */
-	private boolean isTrapped;
+	private boolean isTrapped = false;
 	
 	/**
 	 * Say if box is flagged.
 	 */
-	private boolean isFlagged;
+	private boolean isFlagged = false;
 	
 	/**
 	 * Say if the box must be visible.
 	 */
-	private boolean isClicked;
+	private boolean isClicked = false;
 	
 	/**
 	 * Constructor set boolean on false and set the coordinates of a box.
@@ -39,10 +39,6 @@ public  class Box {
 	public Box(int xLocation, int yLocation) {
 		this.xLocation = xLocation;
 		this.yLocation = yLocation;
-		
-		this.isTrapped = false;
-		this.isFlagged = false;
-		this.isClicked = false;
 	}
 	
 	
