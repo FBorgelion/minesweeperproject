@@ -4,34 +4,51 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 
+/**
+ * This class provides methods to react to game events.
+ * @author Florent Borgelion
+ *
+ */
 public class GridViewController {
 	
-	private Grid grid = new Grid(10, 10, 10);
+	private Grid grid;
 	private GridPane gameBoard;
-	private Box processBox;
 	private BoxListener boxLstn;
-	private Stage stage;
-	
 	private int lastMouseX;
 	private int lastMouseY;
 	
-	private int nBoxes = grid.getHeight();
+	private final int BORDER_SIZE = 95 ;
 	
-	private int BORDER_SIZE = 96;
-	private int BOX_SIZE = 41;
-	
+	/**
+	 * GridViewController reacts to game events.
+	 * Also linked UI and logic.
+	 * @param grid
+	 * @param gameBoard
+	 */
 	public GridViewController(Grid grid, GridPane gameBoard) {
 		this.gameBoard = gameBoard;
 		this.grid = grid;
 	}
-	//here we normalize mouse coords to get the right box in board game
+	
+	/**
+	 * This method takes the mouse coordinates (when user clicked)
+	 *  and get the associated box in the grid.
+	 * If the clicked is out of the grid, return a Box on (-1, -1) coordinates.
+	 * @return the right box in the grid.
+	 */
 	public Box getBoxByMouseCoords() {
-		int normalizedX = (lastMouseX - BORDER_SIZE) / BOX_SIZE;
-		int normalizedY = (lastMouseY - BORDER_SIZE) / BOX_SIZE;
-		if(normalizedX > nBoxes || normalizedY > nBoxes) {
-			return null;
+		int rectSize = 0;
+		if(grid.getHeight() == 10) {
+			rectSize = 40;
+		}
+		else if(grid.getHeight() == 20) {
+			rectSize = (int) (40 / 2);
+		}
+		int normalizedX = (lastMouseX - BORDER_SIZE) / (rectSize+ 1);
+		int normalizedY = (lastMouseY - BORDER_SIZE) /(rectSize + 1);
+		if(normalizedX > grid.getHeight() || normalizedY > grid.getHeight()) {
+			return new Box(-1, -1);
 		}
 		else {			
 			Box box = grid.getBoxStatus(normalizedX, normalizedY);
@@ -63,36 +80,44 @@ public class GridViewController {
 		this.lastMouseY = lastMouseY;
 	}
 	
+	/**
+	 * This method set the clicked box visible and check if the box is trapped.
+	 * If the box is trapped set the game lost.
+	 * Call the getBoxByMouseCoords method witch return the associated box.
+	 */
 	public void setGridStatus() {
 		Box clickedBox = getBoxByMouseCoords();
 		clickedBox.setClicked(true);
 		if(clickedBox.isTrapped()) {
 			grid.setHasLost(true);
-			System.out.println(clickedBox.isTrapped());
 		//must update view
 		}
+		System.out.println(clickedBox.isTrapped());
 		grid.isEnd();
 	}
 	
+	/**
+	 * This method change the state of the box if the player
+	 * guessed this box is trapped (set a flag).
+	 */
 	public void setBoxFlagged() {
 		Box clickedBox = getBoxByMouseCoords();
 		clickedBox.setFlagged(true);
-		//must update view
-	}
-	
-	public Box getProcessBox() {
-		return processBox;
+			//must update view
 	}
 
 	public BoxListener getBoxLstn() {
 		return boxLstn;
 	}
-
-	public int getnBoxes() {
-		return nBoxes;
-	}
 	
-	
+	/**
+	 * Create inner class to handle mouse events.
+	 * When a square is clicked, the instance of BoxListener call this method.
+	 * If the click is the left one, setGridStatus method is called and reveals the box.
+	 * If it's the right one, setBoxFlagged is called and put a flag on the box.
+	 * @author Florent Borgelion
+	 *
+	 */
 	class BoxListener implements EventHandler<MouseEvent>{
 
 		@Override
@@ -109,6 +134,7 @@ public class GridViewController {
 			}
 			if(event.getButton() == MouseButton.SECONDARY) {
 				setBoxFlagged();
+				System.out.println("flagged");
 			}
 		}
 	}
