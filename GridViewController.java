@@ -1,9 +1,20 @@
 package be.fborgelion.minesweeperproject;
 
+
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  * This class provides methods to react to game events.
@@ -17,6 +28,8 @@ public class GridViewController {
 	private BoxListener boxLstn;
 	private int lastMouseX;
 	private int lastMouseY;
+	
+	private int openedBoxes = 0;
 	
 	
 	/**
@@ -86,13 +99,63 @@ public class GridViewController {
 	 */
 	public void setGridStatus() {
 		Box clickedBox = getBoxByMouseCoords();
-		clickedBox.setClicked(true);
 		if(clickedBox.isTrapped()) {
 			grid.setHasLost(true);
-		//must update view
+		}
+		if(grid.isHasLost()) {
+			setLoseScreen();
+		}
+		if(!clickedBox.isClicked()) {
+			clickedBox.setClicked(true);
+			openedBoxes = getOpenedBoxes() + 1;
+			if(openedBoxes  == ((grid.getHeight()*grid.getWidth()) - grid.getNBombs())) {
+				grid.setHasWon(true);
+			}
+			if(grid.isHasWon()) {
+				setLoseScreen();
+			}
 		}
 		System.out.println(clickedBox.isTrapped());
-		grid.isEnd();
+	}
+	
+	public void setLoseScreen() {
+		Stage stage = new Stage();
+		stage.setTitle("Minesweeper");
+		
+		GridPane endView = new GridPane();
+		endView.setAlignment(Pos.CENTER);
+		endView.setHgap(10);
+		endView.setVgap(10);
+		endView.setPadding(new Insets(25, 25, 25, 25));
+		
+		Text endText = new Text();
+		if(grid.isHasLost()) {
+			endText.setText("You lose.");
+		}
+		if(grid.isHasWon()) {
+			endText.setText("Victory !");
+		}
+		endText.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 30));
+		endView.add(endText, 0, 0);
+		
+		Button exitBtn = new Button("Exit");
+		HBox hbBtn = new HBox();
+		hbBtn.getChildren().add(exitBtn);
+		endView.add(hbBtn, 1, 2);
+		
+		exitBtn.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				System.exit(0);
+				
+			}
+		});
+		
+		Scene scene = new Scene(endView, 250, 200);
+		stage.setScene(scene);
+		stage.show();
+			
 	}
 	
 	/**
@@ -109,6 +172,10 @@ public class GridViewController {
 		return boxLstn;
 	}
 	
+	public int getOpenedBoxes() {
+		return openedBoxes;
+	}
+
 	/**
 	 * Create inner class to handle mouse events.
 	 * When a square is clicked, the instance of BoxListener call this method.

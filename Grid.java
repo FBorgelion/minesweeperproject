@@ -126,7 +126,7 @@ public class Grid {
 			int startY = Math.max(0, y - 1);
 			for(int i = startX; i < width && i <= x + 1; i++) { // i <= x + 1 to reach the bomb's next square
 				for(int j = startY; j < height && j <= y + 1; j++) {
-					Box box = board[j][i];
+					Box box = board[i][j];
 					if(box.isTrapped()) {
 						continue;
 					} else {
@@ -136,14 +136,6 @@ public class Grid {
 				}
 			}			
 		}
-	}
-	
-	public boolean isEnd() {
-		boolean end = false;
-		if(isHasLost() || isHasWon()) {
-			end = true;
-		}
-		return end;
 	}
 
 	public boolean isHasLost() {
@@ -158,7 +150,7 @@ public class Grid {
 		return hasWon;
 	}
 
-	public void setHawWon(boolean hawWon) {
+	public void setHasWon(boolean hawWon) {
 		this.hasWon = hawWon;
 	}
 	
