@@ -1,22 +1,71 @@
-package be.fborgelion.minesweeperproject;
+package be.fborgelion.minesweeper;
 
 import java.util.Random;
 
-public class Grid {
+/**
+ * This class contains the board game logic.
+ * This class provides methods to generate bombs on the board.
+ * @author Florent Borgelion
+ *
+ */
+
+public class Grid{
 	
+	/**
+	 * Grid's dimensions.
+	 */
 	private int height;
 	private int width;
+	
+	/**
+	 * Number of trapped boxes in the grid;
+	 */
 	private int nBombs;
-	private Box[][] board = null;
+	
+	private Settings settings;
+	
+	/**
+	 * 2D array board contains all the Boxes and Bombs.
+	 * @see Box
+	 */
+	private Box[][] board;
+	
+	/**
+	 * trappedBox array is used to stock bombs to be used in methods.
+	 */
 	private Box[] trappedBox;
 	
-	public Grid(int height, int width, int nBombs) {
+	/**
+	 * boolean variables for check the end of the game.
+	 */
+	private boolean hasLost = false;;
+	private boolean hasWon = false;
+	
+	/**
+	 * Grid constructor.
+	 * Grid's dimensions are fixed in view of the difficulty.
+	 * When created set Box objects with coordinates in board.
+	 * @param settings : the difficulty of the game.
+	 * @see Settings
+	 * @see Box
+	 */
+	public Grid(Settings settings) {
 		
-		this.height = height;
-		this.width = width;
-		this.nBombs = nBombs;
+		this.height = settings.getSize();
+		this.width = settings.getSize();
+		this.nBombs = (height * width) / 10;
+		this.board = new Box[width][height];
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
+				board[i][j] = new Box(i, j);
+			}
+		}
 	}
-
+	
+	public int getNBombs() {
+		return nBombs;
+	}
+	
 	public int getHeight() {
 		return height;
 	}
@@ -37,9 +86,16 @@ public class Grid {
 		return board;
 	}
 	
-	//will come back to check bombs have different coordinates
-	protected void placeBombs() {		
-		trappedBox = new Box[nBombs];
+	public Box getBoxStatus(int x, int y) {
+		return board[x][y];
+	}
+	
+	/**
+	 * This method set trapped boxes in board.
+	 * Trapped boxes are stocked in an array to be reused for next method.
+	 */
+	public void placeBombs() {
+		this.trappedBox = new Box[nBombs];
 		
 		int count = 0;
 			
@@ -48,39 +104,78 @@ public class Grid {
 			int x = new Random().nextInt(width);
 			int y = new Random().nextInt(height);
 			
-			Box box = new Box(x, y);
+			Box box = board[x][y];
 			box.setTrapped(true);
-			trappedBox[count] = box;
+			this.trappedBox[count] = box;
 			count += 1;
 		} while(count < nBombs);
-		
-		//place bombs in board
-		for(Box box : trappedBox) {
-			board[box.getxLocation()][box.getyLocation()] = box;
-		}
 	}
 	
-	//must add checker/exception. This method must be called AFTER placeBombs()
+	/**
+	 * This method count the adjacent bombs of a box.
+	 * For each bomb in the board the method increments counter
+	 * of adjacent bombs' boxes.
+	 * @see Box
+	 */
 	protected void placeBoxesInBoard() {
 		for(Box bomb : trappedBox) {
 			int x = bomb.getxLocation();
 			int y = bomb.getyLocation();			
-			//start on the previous square of a mine AND in grid
+			
 			int startX = Math.max(0, x - 1);
 			int startY = Math.max(0, y - 1);
-			for(int i = startX; i < width && i <= x + 1; i++) { // i <= x + 1 to reach the bomb's next square
+			
+			for(int i = startX; i < width && i <= x + 1; i++) { 
 				for(int j = startY; j < height && j <= y + 1; j++) {
 					Box box = board[i][j];
-					if(box == null) {
-						board[i][j] = box = new Box(i, j);
-					}
-					else if(box.isTrapped()) {
+					if(box.isTrapped()) {
 						continue;
-					}
+					} else {
 					int countBombs = box.getSurroundingBombs() + 1;
 					box.setSurroundingBombs(countBombs);
+					}
 				}
 			}			
 		}
 	}
+
+	public boolean isHasLost() {
+		return hasLost;
+	}
+
+	public void setHasLost(boolean hasLost) {
+		this.hasLost = hasLost;
+	}
+
+	public boolean isHasWon() {
+		return hasWon;
+	}
+
+	public void setHasWon(boolean hawWon) {
+		this.hasWon = hawWon;
+	}
+	
+	
+	public static void main(String[] args) {
+		
+	}
+
+	public Settings getSettings() {
+		return settings;
+	}
+
+	public void setSettings(Settings settings) {
+		this.settings = settings;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+

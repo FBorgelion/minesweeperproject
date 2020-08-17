@@ -1,23 +1,41 @@
-package be.fborgelion.minesweeperproject;
+package be.fborgelion.minesweeper;
 
-public  class Box {
+/**
+ * This class contains all the logic of a board square.
+ * Box object is set in the board.
+ * @author Florent Borgelion
+ *
+ */
+public  class Box{
 	
 	private int xLocation;
 	private int yLocation;
 	
-	//count adjacent bombs
+	/**
+	 * Counter for adjacent bombs of a box.
+	 */
 	private int surroundingBombs;
 	
-	//bow with bomb
-	private boolean isTrapped;
+	/**
+	 * Say if a box is a bomb or not.
+	 */
+	private boolean isTrapped = false;
 	
-	//player put a red flag on the box (display)
-	private boolean isFlagged;
+	/**
+	 * Say if box is flagged.
+	 */
+	private boolean isFlagged = false;
 	
-	//player has guessed this box (display)
-	private boolean isClicked;
+	/**
+	 * Say if the box must be visible.
+	 */
+	private boolean isClicked = false;
 	
-	
+	/**
+	 * Constructor set boolean on false and set the coordinates of a box.
+	 * @param xLocation : x location in the board.
+	 * @param yLocation : y location in the board.
+	 */
 	public Box(int xLocation, int yLocation) {
 		this.xLocation = xLocation;
 		this.yLocation = yLocation;
